@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ PureMVC Flex/Rails Demo – Index Cards 
+ Copyright (c) 2008 Jim Robson <jim.robson@puremvc.org>
+ Your reuse is governed by the Creative Commons Attribution 3.0 License
+-->
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+	<mx:Metadata>
+		[Event(name="{selectCardEventType}", type="flash.events.Event")]
+		[Event(name="{selectSubjectEventType}", type="flash.events.Event")]
+		[Event(name="{scrollCardEventType}", type="org.puremvc.as3.demos.flex.rails.indexcards.view.events.ItemScrollEvent")]
+		[Event(name="{updateCardEventType}", type="flash.events.Event")]
+		[Event(name="{createCardEventType}", type="flash.events.Event")]
+		[Event(name="{deleteCardEventType}", type="flash.events.Event")]
+	</mx:Metadata>
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Button;
+			import mx.controls.TextArea;
+			import mx.controls.TextInput;
+			import mx.controls.ComboBox;
+			import mx.controls.DataGrid;
+			import mx.events.ListEvent;
+			import mx.events.DataGridEvent;
+			import mx.collections.ArrayCollection;
+			
+			import org.puremvc.as3.demos.flex.rails.indexcards.view.events.ItemScrollEvent;
+			import org.puremvc.as3.demos.flex.rails.indexcards.view.utils.Constants;
+			
+			public const VIEW_TYPE:String = Constants.INDEX_CARD_VIEW_TYPE;
+			
+			[Bindable]
+			public var selectCardEventType:String = "userSelectsCard";
+			[Bindable]
+			public var selectSubjectEventType:String = "subjectSelectionChanged";
+			[Bindable]
+			public var scrollCardEventType:String = "scrollThroughCards";
+			[Bindable]
+			public var updateCardEventType:String = "updateCardRequest";
+			[Bindable]
+			public var createCardEventType:String = "createCardRequest";
+			[Bindable]
+			public var deleteCardEventType:String = "deleteCardRequest";
+			
+			[Bindable]
+			public var card:Object;
+			[Bindable]
+			public var subjectCollection:ArrayCollection;
+			[Bindable]
+			public var rubberBandCollection:ArrayCollection;
+			[Bindable]
+			public var indexCardCollection:ArrayCollection;
+			[Bindable]
+			public var subjectIndex:uint;
+			[Bindable]
+			public var rubberBandIndex:uint;
+			[Bindable]
+			public var indexCardIndex:int;
+			[Bindable]
+			public var cardCount:uint;
+			[Bindable]
+			public var currentCard:uint;
+			[Bindable]
+			public var isFirstCard:Boolean = true;
+			[Bindable]
+			public var isLastCard:Boolean = false;
+			
+			[Bindable]
+			public var dgCards:DataGrid;
+			[Bindable]
+			public var cmbRubberBand:ComboBox;
+			[Bindable]
+			public var cmbSubject:ComboBox;
+			[Bindable]
+			public var txiFrontSide:TextInput;
+			[Bindable]
+			public var txaBackSide:TextArea;
+			[Bindable]
+			public var btnFirst:Button;
+			[Bindable]
+			public var btnPrevious:Button;
+			[Bindable]
+			public var btnNext:Button;
+			[Bindable]
+			public var btnLast:Button;
+			
+			public function get indexCardId():int
+			{
+				return dgCards.selectedItem.id;
+			}
+			
+			public function get rubberBandId():int
+			{
+				return cmbRubberBand.selectedItem.id;
+			}
+			
+			public function get subjectId():int
+			{
+				return cmbSubject.selectedItem.id;
+			}
+			
+			public function get frontSide():String
+			{
+				return txiFrontSide.text;
+			}
+			
+			public function get backSide():String
+			{
+				return txaBackSide.text;
+			}
+			
+			protected function setSelectedCard(event:ListEvent):void
+			{
+				indexCardIndex = event.target.selectedIndex;
+				dispatchEvent(new Event(selectCardEventType));
+			}
+			
+			protected function setSelectedSubject(event:ListEvent):void
+			{
+				dispatchEvent(new Event(selectSubjectEventType));
+			}
+			
+			protected function clearForm(event:MouseEvent):void
+			{
+				dgCards.selectedIndex = -1;
+			}
+			
+			protected function updateCard(event:MouseEvent):void
+			{
+				dispatchEvent(new Event(updateCardEventType));
+			}
+			
+			protected function createCard(event:MouseEvent):void
+			{
+				dispatchEvent(new Event(createCardEventType));
+			}
+			
+			protected function deleteCard(event:MouseEvent):void
+			{
+				dispatchEvent(new Event(deleteCardEventType));
+			}
+			
+			protected function scrollToCard(event:MouseEvent):void
+			{
+				var scrollTo:String;
+				switch(event.target)
+				{
+					case btnFirst:
+						scrollTo = Constants.SCROLL_FIRST;
+						break;
+					case btnPrevious:
+						scrollTo = Constants.SCROLL_PREVIOUS;
+						break;
+					case btnNext:
+						scrollTo = Constants.SCROLL_NEXT;
+						break;
+					case btnLast:
+						scrollTo = Constants.SCROLL_LAST;
+						break;
+					default:
+					// Do nothing
+				}
+				dispatchEvent(new ItemScrollEvent(scrollCardEventType, scrollTo));
+			}
+		]]>
+	</mx:Script>
+</mx:Canvas>

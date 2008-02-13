@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ PureMVC Flex/Rails Demo – Index Cards 
+ Copyright (c) 2008 Jim Robson <jim.robson@puremvc.org>
+ Your reuse is governed by the Creative Commons Attribution 3.0 License
+-->
+<base:IndexCardViewBase xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:base="org.puremvc.as3.demos.flex.rails.indexcards.view.components.base.*" width="100%" height="100%">	
+
+	
+	
+	 <mx:VDividedBox x="0" y="0" height="100%" width="100%">
+        <mx:Panel width="100%" height="50%" layout="absolute" title="Create/Update Cards">
+            <mx:Form x="10" y="10" width="100%" height="100%">
+                <mx:FormItem label="Front side">
+                    <mx:TextInput width="220" id="txiFrontSide" text="{dgCards.selectedItem.frontSide}"/>
+                </mx:FormItem>
+                <mx:FormItem label="Back side">
+                    <mx:TextArea width="336" height="111" id="txaBackSide" text="{dgCards.selectedItem.backSide}"/>
+                </mx:FormItem>
+                <mx:FormItem label="Subject" >
+                    <mx:ComboBox width="225" id="cmbSubject" dataProvider="{subjectCollection}" selectedIndex="{subjectIndex}" labelField="name" change="setSelectedSubject(event)" />
+                </mx:FormItem>
+                <mx:FormItem label="Rubber band">
+                    <mx:ComboBox width="225" id="cmbRubberBand" dataProvider="{rubberBandCollection}" selectedIndex="{rubberBandIndex}" labelField="name" />
+                </mx:FormItem>
+            </mx:Form>
+            <mx:ControlBar horizontalAlign="right">
+                <mx:Button label="Clear Form" click="clearForm(event)" />
+                <mx:Button label="Update Card" click="updateCard(event)" />
+                <mx:Button label="Create Card" click="createCard(event)" />
+            </mx:ControlBar>
+        </mx:Panel>
+        <mx:Panel width="100%" height="50%" layout="absolute" title="Card List" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+            <mx:DataGrid x="0" y="0" width="100%" height="100%" id="dgCards" dataProvider="{indexCardCollection}" change="setSelectedCard(event)" variableRowHeight="true" horizontalScrollPolicy="off" verticalScrollPolicy="auto" >
+                <mx:columns>
+                    <mx:DataGridColumn headerText="Front side" dataField="frontSide"/>
+                    <mx:DataGridColumn headerText="Back Side" dataField="backSide"/>
+                    <mx:DataGridColumn headerText="Subject" dataField="subject"/>
+                    <mx:DataGridColumn headerText="Rubber Band" dataField="rubberBand"/>
+                </mx:columns>
+            </mx:DataGrid>
+            <mx:ControlBar horizontalAlign="right">
+                <mx:Button label="Delete" click="deleteCard(event)" />
+            </mx:ControlBar>
+        </mx:Panel>
+    </mx:VDividedBox>
+</base:IndexCardViewBase>

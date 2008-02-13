@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ PureMVC Flex/Rails Demo – Index Cards 
+ Copyright (c) 2008 Jim Robson <jim.robson@puremvc.org>
+ Your reuse is governed by the Creative Commons Attribution 3.0 License
+-->
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="onCreationComplete()"
+	xmlns:view="org.puremvc.as3.demos.flex.rails.indexcards.view.components.*" 
+	layout="absolute" >
+	
+	<mx:Metadata>
+		[Event(name="{navEventType}",type="org.puremvc.as3.demos.flex.rails.indexcards.view.events.NavigationEvent")]
+	</mx:Metadata>
+	<mx:Script>
+		<![CDATA[
+			import org.puremvc.as3.demos.flex.rails.indexcards.ApplicationFacade;
+			import org.puremvc.as3.demos.flex.rails.indexcards.view.components.*;
+			import org.puremvc.as3.demos.flex.rails.indexcards.view.events.*;
+			import mx.containers.ApplicationControlBar;
+			
+			// Store the event type for the events I dispatch
+			[Bindable]
+			public var navEventType:String = NavigationEvent.NAVIGATE;
+			
+			// Get the Facade instance
+			private var facade:ApplicationFacade = ApplicationFacade.getInstance();
+			
+			// Handles the application CreationComplete event
+			private function onCreationComplete():void
+			{
+				facade.startup(this);
+				// TODO: Remove this call when login functionality is added
+				onLogin();
+			}
+			
+			// Simulates the login event (TODO: Create a login and user management workflow)
+			private function onLogin():void
+			{
+				currentState = "mainMenu";
+				facade.login(this);
+			}
+			
+			/*
+			 * Main Navigation Button Click Event Handlers
+			 */
+			 
+			// Handles the study button click event
+			private function study(event:MouseEvent):void
+			{
+				currentState = "studyScreen";
+				dispatchEvent(new NavigationEvent(navEventType, icViewer));
+			}
+			// Handles the cards button click event
+			private function manageCards(event:MouseEvent):void
+			{
+				currentState = "cardScreen";
+				dispatchEvent(new NavigationEvent(navEventType, cardEditPanel));
+			}
+			// Handles the Rubber Bands button click event
+			private function manageRubberBands(event:MouseEvent):void
+			{
+				currentState = "bandScreen";
+				dispatchEvent(new NavigationEvent(navEventType, bandEditPanel));
+			}
+			// Handles the Subjects button click event
+			private function manageSubjects(event:MouseEvent):void
+			{
+				currentState = "subjectScreen";
+				dispatchEvent(new NavigationEvent(navEventType, subjectEditPanel));
+			}
+			// End Main Navigation Button Click Event Handlers
+		]]>
+	</mx:Script>
+	
+	<mx:states>
+		<!-- The first screen visible upon "login" (currently the main navigation bar) -->
+		<mx:State name="mainMenu">
+			<mx:AddChild position="lastChild">
+				<mx:ApplicationControlBar dock="true" id="controlBar">
+					<mx:Label text="Index Cards"/>
+					<mx:Spacer width="40" />
+					<mx:Button label="Study!" click="study(event)"/>
+					<mx:Spacer width="120" />
+					<mx:Button label="Cards" click="manageCards(event)"/>
+					<mx:Button label="Rubber Bands" click="manageRubberBands(event)"/>
+					<mx:Button label="Subjects" click="manageSubjects(event)"/>
+				</mx:ApplicationControlBar>
+			</mx:AddChild>
+		</mx:State>
+		<!-- The Study screen -->
+		<mx:State name="studyScreen" basedOn="mainMenu">
+			<mx:AddChild position="lastChild">
+				<view:IndexCardViewer left="10" top="10" right="10" bottom="10" id="icViewer">
+				</view:IndexCardViewer>
+			</mx:AddChild>
+		</mx:State>
+		<!-- The Manage Cards screen -->
+		<mx:State name="cardScreen" basedOn="mainMenu">
+			<mx:AddChild position="lastChild">
+				<view:CardEditPanel id="cardEditPanel" right="10" bottom="10" left="10" top="10" />
+			</mx:AddChild>
+		</mx:State>
+		<!-- The Manage Rubber Bands screen -->
+		<mx:State name="bandScreen" basedOn="mainMenu">
+			<mx:AddChild position="lastChild">
+				<view:BandEditPanel id="bandEditPanel" bottom="10" right="10" top="10" left="10" />
+			</mx:AddChild>
+		</mx:State>
+		<!-- The Manage Subjects screen --> 
+		<mx:State name="subjectScreen" basedOn="mainMenu">
+			<mx:AddChild position="lastChild">
+				<view:SubjectEditPanel bottom="10" right="10" top="10" left="10" id="subjectEditPanel" />
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	
+	<!-- TODO: When the application gets more complex and/or the styling becomes more substantial,
+		 move the following to a css file. -->
+	<mx:Style>
+		.indexCardFront { font-size:24px; font-weight:bold; text-align:center; }
+		.indexCardBack  { font-size:14px; }
+		.indexCardRubberBand {  }
+		.indexCardButton  {  }
+	</mx:Style>
+	
+</mx:Application>

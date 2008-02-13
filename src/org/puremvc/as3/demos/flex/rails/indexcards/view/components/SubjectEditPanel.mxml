@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ PureMVC Flex/Rails Demo – Index Cards 
+ Copyright (c) 2008 Jim Robson <jim.robson@puremvc.org>
+ Your reuse is governed by the Creative Commons Attribution 3.0 License
+-->
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+	
+	<mx:Metadata>
+		[Event(name="{updateSubjectEventType}", type="flash.events.Event")]
+		[Event(name="{createSubjectEventType}", type="flash.events.Event")]
+		[Event(name="{deleteSubjectEventType}", type="flash.events.Event")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			import org.puremvc.as3.demos.flex.rails.indexcards.view.utils.Constants;
+			
+			public const VIEW_TYPE:String = Constants.SUBJECT_VIEW_TYPE;
+			
+			[Bindable]
+			public var updateSubjectEventType:String = "updateSubjectRequest";
+			[Bindable]
+			public var createSubjectEventType:String = "createSubjectRequest";
+			[Bindable]
+			public var deleteSubjectEventType:String = "deleteSubjectRequest";
+			
+			[Bindable]
+			public var subjectCollection:ArrayCollection;
+			
+			public function get subjectId():int
+			{
+				return dgSubjects.selectedItem.id;
+			}
+			
+			public function get subjectName():String
+			{
+				return txtSubjectName.text;
+			}
+			
+			private function clearForm(event:MouseEvent):void
+			{
+				dgSubjects.selectedIndex = -1;
+			}
+			
+			private function updateSubject(event:MouseEvent):void
+			{
+				dispatchEvent(new Event(updateSubjectEventType));
+			}
+			
+			private function createSubject(event:MouseEvent):void
+			{
+				dispatchEvent(new Event(createSubjectEventType));
+			}
+			
+			private function deleteSubject(event:MouseEvent):void
+			{
+				dispatchEvent(new Event(deleteSubjectEventType));
+			}
+			
+			
+		]]>
+	</mx:Script>
+
+	<mx:VDividedBox x="0" y="0" height="100%" width="100%">
+        <mx:Panel width="100%" height="50%" layout="absolute" title="Create/Update Subjects">
+            <mx:Form x="10" y="10" width="100%" height="100%">
+                <mx:FormItem label="Subject Name">
+                    <mx:TextInput width="220" id="txtSubjectName" text="{dgSubjects.selectedItem.name}"/>
+                </mx:FormItem>
+            </mx:Form>
+            <mx:ControlBar horizontalAlign="right">
+                <mx:Button label="Clear Form" click="clearForm(event)" />
+                <mx:Button label="Update Subject" click="updateSubject(event)" />
+                <mx:Button label="Create Subject" click="createSubject(event)" />
+            </mx:ControlBar>
+        </mx:Panel>
+        <mx:Panel width="100%" height="50%" layout="absolute" title="Subject List" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+            <mx:DataGrid x="0" y="0" width="100%" height="50%" id="dgSubjects" dataProvider="{subjectCollection}" variableRowHeight="true" horizontalScrollPolicy="off" verticalScrollPolicy="auto" >
+                <mx:columns>
+                    <mx:DataGridColumn headerText="Subject" dataField="name"/>
+                </mx:columns>
+            </mx:DataGrid>
+            <mx:ControlBar horizontalAlign="right">
+                <mx:Button label="Delete" click="deleteSubject(event)" />
+            </mx:ControlBar>
+        </mx:Panel>
+    </mx:VDividedBox>
+</mx:Canvas>

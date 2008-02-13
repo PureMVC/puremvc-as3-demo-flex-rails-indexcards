@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ PureMVC Flex/Rails Demo – Index Cards 
+ Copyright (c) 2008 Jim Robson <jim.robson@puremvc.org>
+ Your reuse is governed by the Creative Commons Attribution 3.0 License
+-->
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+	
+	<mx:Metadata>
+		[Event(name="{updateBandEventType}", type="flash.events.Event")]
+		[Event(name="{createBandEventType}", type="flash.events.Event")]
+		[Event(name="{deleteBandEventType}", type="flash.events.Event")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			import org.puremvc.as3.demos.flex.rails.indexcards.view.utils.Constants;
+			
+			public const VIEW_TYPE:String = Constants.RUBBER_BAND_VIEW_TYPE;
+			
+			[Bindable]
+			public var updateBandEventType:String = "updateBandRequest";
+			[Bindable]
+			public var createBandEventType:String = "createBandRequest";
+			[Bindable]
+			public var deleteBandEventType:String = "deleteBandRequest";
+			
+			[Bindable]
+			public var subjectIndex:int; 
+			[Bindable]
+			public var rubberBandCollection:ArrayCollection;
+			[Bindable]
+			public var subjectCollection:ArrayCollection;
+			
+			private function clearForm(event:MouseEvent):void
+			{
+				dgRubberBands.selectedIndex = -1;
+			}
+			
+			public function get rubberBandId():int
+			{
+				return dgRubberBands.selectedItem.id;
+			}
+			
+			public function get rubberBandName():String
+			{
+				return txtRubberBandName.text;
+			}
+			
+			public function get subjectId():int
+			{
+				return cmbSubject.selectedItem.id;
+			}
+			
+			private function updateRubberBand(event:MouseEvent):void
+			{
+				dispatchEvent(new Event(updateBandEventType));
+			}
+			
+			private function createRubberBand(event:MouseEvent):void
+			{
+				dispatchEvent(new Event(createBandEventType));
+			}
+			
+			private function deleteRubberBand(event:MouseEvent):void
+			{
+				dispatchEvent(new Event(deleteBandEventType));
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:VDividedBox x="0" y="0" height="100%" width="100%">
+        <mx:Panel width="100%" height="50%" layout="absolute" title="Create/Update Rubber Bands">
+            <mx:Form x="10" y="10" width="100%" height="100%">
+                <mx:FormItem label="Rubber Band Name">
+                    <mx:TextInput width="220" id="txtRubberBandName" text="{dgRubberBands.selectedItem.name}"/>
+                </mx:FormItem>
+                <mx:FormItem label="Subject" >
+                    <mx:ComboBox width="225" id="cmbSubject" dataProvider="{subjectCollection}" selectedIndex="{subjectIndex}" labelField="name" />
+                </mx:FormItem>
+            </mx:Form>
+            <mx:ControlBar horizontalAlign="right">
+                <mx:Button label="Clear Form" click="clearForm(event)" />
+                <mx:Button label="Update Rubber Band" click="updateRubberBand(event)" />
+                <mx:Button label="Create Rubber Band" click="createRubberBand(event)" />
+            </mx:ControlBar>
+        </mx:Panel>
+        <mx:Panel width="100%" height="50%" layout="absolute" title="Rubber Band List" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+            <mx:DataGrid x="0" y="0" width="100%" height="100%" id="dgRubberBands" dataProvider="{rubberBandCollection}" variableRowHeight="true" horizontalScrollPolicy="off" verticalScrollPolicy="auto" >
+                <mx:columns>
+                    <mx:DataGridColumn headerText="Rubber Band" dataField="name"/>
+                    <mx:DataGridColumn headerText="Subject" dataField="subject"/>
+                </mx:columns>
+            </mx:DataGrid>
+            <mx:ControlBar horizontalAlign="right">
+                <mx:Button label="Delete" click="deleteRubberBand(event)" />
+            </mx:ControlBar>
+        </mx:Panel>
+    </mx:VDividedBox>
+</mx:Canvas>
