@@ -5,9 +5,9 @@
 */
 package org.puremvc.as3.demos.flex.rails.indexcards.model.utils
 {
-	import org.puremvc.as3.demos.flex.rails.indexcards.vo.*;
-	
 	import mx.collections.ArrayCollection;
+	
+	import org.puremvc.as3.demos.flex.rails.indexcards.model.vo.*;
 	
 	public class Translator
 	{

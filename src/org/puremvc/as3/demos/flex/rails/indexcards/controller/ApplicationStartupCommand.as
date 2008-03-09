@@ -5,16 +5,16 @@
 */
 package org.puremvc.as3.demos.flex.rails.indexcards.controller
 {
-	import org.puremvc.patterns.command.MacroCommand;
+	import org.puremvc.as3.patterns.command.MacroCommand;
 
 	public class ApplicationStartupCommand extends MacroCommand
 	{
 		
 		override protected function initializeMacroCommand():void
 		{
-			addSubCommand(org.puremvc.as3.demos.flex.rails.indexcards.controller.SubjectCommand);
-			addSubCommand(org.puremvc.as3.demos.flex.rails.indexcards.controller.RubberBandCommand);
-			addSubCommand(org.puremvc.as3.demos.flex.rails.indexcards.controller.IndexCardCommand);
+			addSubCommand(SubjectCommand);
+			addSubCommand(RubberBandCommand);
+			addSubCommand(IndexCardCommand);
 		}
 		
 	}

@@ -5,22 +5,22 @@
 */
 package org.puremvc.as3.demos.flex.rails.indexcards.view
 {
-	import org.puremvc.as3.demos.flex.rails.indexcards.ApplicationFacade;
+	import org.puremvc.as3.demos.flex.rails.indexcards.*;
 	import org.puremvc.as3.demos.flex.rails.indexcards.view.components.*;
 	import org.puremvc.as3.demos.flex.rails.indexcards.view.events.*;
 	import org.puremvc.as3.demos.flex.rails.indexcards.view.utils.*;
+	import org.puremvc.as3.patterns.mediator.Mediator;
 	
-	import org.puremvc.patterns.mediator.Mediator;
 
 	public class NavigationMediator extends Mediator
 	{
 		
 		public static const NAME:String = "NavigationMediator";
 		
-		public function NavigationMediator(viewComponent:Object)
+		public function NavigationMediator( viewComponent:IndexCards )
 		{
-			super(viewComponent);
-			viewComponent.addEventListener(NavigationEvent.NAVIGATE,onNavEvent);
+			super( NAME, viewComponent );
+			app.addEventListener(NavigationEvent.NAVIGATE,onNavEvent);
 		}
 		
 		private function onNavEvent(event:NavigationEvent):void
@@ -41,9 +41,12 @@ package org.puremvc.as3.demos.flex.rails.indexcards.view
 				case Constants.STUDY_VIEW_TYPE:
 					sendNotification(ApplicationFacade.STUDY_VIEW, component, viewType);
 					break;
-				default:
-					// Do nothing
 			}
+		}
+		
+		protected function get app():IndexCards
+		{
+			return viewComponent as IndexCards;
 		}
 				
 	}

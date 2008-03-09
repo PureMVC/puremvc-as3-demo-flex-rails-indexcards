@@ -5,30 +5,28 @@
 */
 package org.puremvc.as3.demos.flex.rails.indexcards.controller
 {
-	import org.puremvc.as3.demos.flex.rails.indexcards.ApplicationFacade;
-	import org.puremvc.as3.demos.flex.rails.indexcards.model.SubjectProxy;
-	import org.puremvc.as3.demos.flex.rails.indexcards.view.SubjectMediator;
-	
-	import org.puremvc.interfaces.INotification;
-	import org.puremvc.patterns.command.SimpleCommand;
+	import org.puremvc.as3.interfaces.INotification;
+	import org.puremvc.as3.patterns.command.SimpleCommand;
+
+	import org.puremvc.as3.demos.flex.rails.indexcards.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.model.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.view.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.view.components.*;
 
 	public class SubjectCommand extends SimpleCommand
 	{
 		
-		override public function execute(notification:INotification):void
+		override public function execute( notification:INotification ):void
 		{
-			var facade:ApplicationFacade = ApplicationFacade.getInstance();
-			var proxy:SubjectProxy = facade.retrieveProxy(ApplicationFacade.SUBJECT_PROXY) as SubjectProxy;
+			var subjectProxy:SubjectProxy = facade.retrieveProxy( SubjectProxy.NAME ) as SubjectProxy;
 			switch(notification.getName())
 			{
-				case ApplicationFacade.APP_STARTUP:
-					proxy.loadSubjects();
+				case ApplicationFacade.STARTUP:
+					subjectProxy.loadSubjects();
 					break;
 				case ApplicationFacade.SUBJECTS_VIEW:
-					facade.registerMediator(new SubjectMediator(notification.getBody()));
+					facade.registerMediator( new SubjectMediator(notification.getBody() as SubjectEditPanel));
 					break;
-				default:
-				 // do nothing
 			}
 		}
 		

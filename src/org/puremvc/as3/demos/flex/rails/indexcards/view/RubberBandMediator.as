@@ -5,40 +5,34 @@
 */
 package org.puremvc.as3.demos.flex.rails.indexcards.view
 {
-	import org.puremvc.as3.demos.flex.rails.indexcards.ApplicationFacade;
-	import org.puremvc.as3.demos.flex.rails.indexcards.model.RubberBandProxy;
-	import org.puremvc.as3.demos.flex.rails.indexcards.model.utils.CollectionUtils;
-	
 	import flash.events.Event;
-	
 	import mx.collections.ArrayCollection;
+
+	import org.puremvc.as3.interfaces.INotification;
+	import org.puremvc.as3.patterns.mediator.Mediator;
 	
-	import org.puremvc.interfaces.INotification;
-	import org.puremvc.patterns.mediator.Mediator;
+	import org.puremvc.as3.demos.flex.rails.indexcards.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.model.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.model.utils.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.view.components.*;
 
 	public class RubberBandMediator extends Mediator
 	{
 		public static const NAME:String = "RubberBandMediator";
-		
-		private var _facade:ApplicationFacade = ApplicationFacade.getInstance();
-		private var _proxy:RubberBandProxy = _facade.retrieveProxy(ApplicationFacade.RUBBER_BAND_PROXY)as RubberBandProxy;
-		
-		
-		public function RubberBandMediator(viewComponent:Object=null)
+
+		public function RubberBandMediator( viewComponent:BandEditPanel )
 		{
-			super(viewComponent);
-			viewComponent.addEventListener(viewComponent.updateBandEventType, onUserUpdateRequest);
-			viewComponent.addEventListener(viewComponent.createBandEventType, onUserCreateRequest);
-			viewComponent.addEventListener(viewComponent.deleteBandEventType, onUserDeleteRequest);
-			viewComponent.rubberBandCollection = setManagedAssociations();
-			viewComponent.subjectCollection = _proxy.subjectCollection; 
+			super( NAME, viewComponent );
+			
+			rubberBandProxy = facade.retrieveProxy(RubberBandProxy.NAME)as RubberBandProxy;
+			
+			bandEditPanel.addEventListener(bandEditPanel.updateBandEventType, onUserUpdateRequest);
+			bandEditPanel.addEventListener(bandEditPanel.createBandEventType, onUserCreateRequest);
+			bandEditPanel.addEventListener(bandEditPanel.deleteBandEventType, onUserDeleteRequest);
+			bandEditPanel.rubberBandCollection = setManagedAssociations();
+			bandEditPanel.subjectCollection = rubberBandProxy.subjectCollection; 
 		}
-		
-		override public function getMediatorName():String
-		{
-			return NAME;
-		}
-		
+
 		override public function listNotificationInterests():Array
 		{
 			return [ApplicationFacade.RUBBER_BANDS_LOADED, 
@@ -50,23 +44,21 @@ package org.puremvc.as3.demos.flex.rails.indexcards.view
 			switch(notification.getName())
 			{
 				case ApplicationFacade.RUBBER_BANDS_LOADED:
-					viewComponent.rubberBandCollection = setManagedAssociations();
+					bandEditPanel.rubberBandCollection = setManagedAssociations();
 					break;
 				case ApplicationFacade.SUBJECTS_LOADED:
-					viewComponent.subjectCollection = _proxy.subjectCollection;
+					bandEditPanel.subjectCollection = rubberBandProxy.subjectCollection;
 					break;
-				default:
-					// do nothing
 			}
 		}
 		
 		private function setManagedAssociations():ArrayCollection
 		{
-			var bands:ArrayCollection = _proxy.rubberBandCollection;
+			var bands:ArrayCollection = rubberBandProxy.rubberBandCollection;
 			for(var i:uint=0; i < bands.length; i++)
 			{
 				var band:Object = bands.getItemAt(i);
-				var subject:Object = CollectionUtils.getItemById(_proxy.subjectCollection, band.subjectId);
+				var subject:Object = CollectionUtils.getItemById(rubberBandProxy.subjectCollection, band.subjectId);
 				band.subject = subject.name;
 			}
 			return bands;
@@ -74,18 +66,25 @@ package org.puremvc.as3.demos.flex.rails.indexcards.view
 		
 		private function onUserUpdateRequest(event:Event):void
 		{
-			_proxy.updateRubberBand(viewComponent);
+			rubberBandProxy.updateRubberBand(bandEditPanel);
 		}
 		
 		private function onUserCreateRequest(event:Event):void
 		{
-			_proxy.createRubberBand(viewComponent);
+			rubberBandProxy.createRubberBand(bandEditPanel);
 		}
 		
 		private function onUserDeleteRequest(event:Event):void
 		{
-			_proxy.deleteRubberBand(viewComponent.rubberBandId);
+			rubberBandProxy.deleteRubberBand(bandEditPanel.rubberBandId);
 		}
 		
+		protected function get bandEditPanel():BandEditPanel
+		{
+			return viewComponent as BandEditPanel;
+		}
+
+		private var rubberBandProxy:RubberBandProxy;
+
 	}
 }

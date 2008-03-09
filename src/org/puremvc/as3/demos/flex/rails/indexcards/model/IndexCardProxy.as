@@ -5,35 +5,28 @@
 */
 package org.puremvc.as3.demos.flex.rails.indexcards.model
 {
-	import org.puremvc.as3.demos.flex.rails.indexcards.ApplicationFacade;
-	import org.puremvc.as3.demos.flex.rails.indexcards.model.utils.*
-	import org.puremvc.as3.demos.flex.rails.indexcards.model.utils.CollectionUtils;
-	import org.puremvc.as3.demos.flex.rails.indexcards.vo.*;
-	
-	import mx.collections.ArrayCollection;
-	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
-	import mx.rpc.events.FaultEvent;
+	import mx.rpc.AsyncToken;
 	import mx.rpc.http.HTTPService;
-	
-	import org.puremvc.interfaces.IProxy;
-	import org.puremvc.patterns.observer.Notifier;
+	import mx.rpc.events.FaultEvent;
+	import mx.collections.ArrayCollection;
 
-	public class IndexCardProxy extends Notifier implements IProxy, IResponder
+	import org.puremvc.as3.interfaces.IProxy;
+	import org.puremvc.as3.patterns.proxy.Proxy;
+	
+	import org.puremvc.as3.demos.flex.rails.indexcards.ApplicationFacade;
+	import org.puremvc.as3.demos.flex.rails.indexcards.model.utils.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.vo.*;
+
+	public class IndexCardProxy extends Proxy implements IProxy, IResponder
 	{
 		
 		public static const NAME:String = "IndexCardProxy";
 		
-		private var _facade:ApplicationFacade = ApplicationFacade.getInstance();
-		private var _rubberBandProxy:RubberBandProxy = _facade.retrieveProxy(ApplicationFacade.RUBBER_BAND_PROXY) as RubberBandProxy;
-		private var _currentUrl:String;
-		private var _indexCardId:int;
-		private var _indexCardIndex:uint;
-		private var _indexCardCollection:ArrayCollection;
-		
-		public function getProxyName():String
+		public function IndexCardProxy()
 		{
-			return NAME;
+			super(NAME, null);
+			rubberBandProxy = facade.retrieveProxy( RubberBandProxy.NAME ) as RubberBandProxy;
 		}
 		
 		public function get indexCardCollection():ArrayCollection
@@ -50,7 +43,7 @@ package org.puremvc.as3.demos.flex.rails.indexcards.model
 		{
 			_indexCardId = id;
 			_indexCardIndex = CollectionUtils.getIndexById(_indexCardCollection,_indexCardId);
-			_rubberBandProxy.rubberBandId = _indexCardCollection.getItemAt(_indexCardIndex).id;
+			rubberBandProxy.rubberBandId = _indexCardCollection.getItemAt(_indexCardIndex).id;
 		}
 		
 		public function get indexCardIndex():uint
@@ -60,32 +53,32 @@ package org.puremvc.as3.demos.flex.rails.indexcards.model
 		
 		public function get rubberBandCollection():ArrayCollection
 		{
-			return _rubberBandProxy.rubberBandCollection;
+			return rubberBandProxy.rubberBandCollection;
 		}
 		
 		public function get subjectCollection():ArrayCollection
 		{
-			return _rubberBandProxy.subjectCollection;
+			return rubberBandProxy.subjectCollection;
 		}
 		
 		public function get rubberBandId():int
 		{
-			return _rubberBandProxy.rubberBandId;
+			return rubberBandProxy.rubberBandId;
 		}
 		
 		public function get rubberBandIndex():uint
 		{
-			return _rubberBandProxy.rubberBandIndex;
+			return rubberBandProxy.rubberBandIndex;
 		}
 		
 		public function get subjectId():int
 		{
-			return _rubberBandProxy.subjectId;
+			return rubberBandProxy.subjectId;
 		}
 		
 		public function get subjectIndex():uint
 		{
-			return _rubberBandProxy.subjectIndex;
+			return rubberBandProxy.subjectIndex;
 		}
 		
 		public function setIdFromIndex(index:int):void
@@ -170,5 +163,11 @@ package org.puremvc.as3.demos.flex.rails.indexcards.model
 			token.addResponder(this);
 		}
 		
+		private var rubberBandProxy:RubberBandProxy;
+		
+		private var _currentUrl:String;
+		private var _indexCardId:int;
+		private var _indexCardIndex:uint;
+		private var _indexCardCollection:ArrayCollection = new ArrayCollection();
 	}
 }

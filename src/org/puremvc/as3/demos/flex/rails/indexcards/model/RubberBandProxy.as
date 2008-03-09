@@ -5,33 +5,27 @@
 */
 package org.puremvc.as3.demos.flex.rails.indexcards.model
 {
-	import org.puremvc.as3.demos.flex.rails.indexcards.ApplicationFacade;
-	import org.puremvc.as3.demos.flex.rails.indexcards.model.utils.*;
-	import org.puremvc.as3.demos.flex.rails.indexcards.model.utils.CollectionUtils;
-	
-	import mx.collections.ArrayCollection;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.http.HTTPService;
+	import mx.collections.ArrayCollection;
 	
-	import org.puremvc.interfaces.IProxy;
-	import org.puremvc.patterns.observer.Notifier;
+	import org.puremvc.as3.interfaces.IProxy;
+	import org.puremvc.as3.patterns.proxy.Proxy;
 
-	public class RubberBandProxy extends Notifier implements IProxy, IResponder
+	import org.puremvc.as3.demos.flex.rails.indexcards.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.model.utils.*;
+
+	public class RubberBandProxy extends Proxy implements IProxy, IResponder
 	{
 		public static const NAME:String = "RubberBandProxy";
 		
-		private var _facade:ApplicationFacade = ApplicationFacade.getInstance();
-		private var _subjectProxy:SubjectProxy = _facade.retrieveProxy(ApplicationFacade.SUBJECT_PROXY) as SubjectProxy;
-		private var _rubberBandId:int;
-		private var _rubberBandIndex:uint;
-		private var _rubberBandCollection:ArrayCollection;
-		private var _currentUrl:String;
-		
-		public function getProxyName():String
+		public function RubberBandProxy()
 		{
-			return NAME;
+			super( NAME, null );
+			
+			subjectProxy = facade.retrieveProxy( SubjectProxy.NAME ) as SubjectProxy;
 		}
 		
 		public function get rubberBandId():int
@@ -43,7 +37,7 @@ package org.puremvc.as3.demos.flex.rails.indexcards.model
 		{
 			_rubberBandId = id;
 			_rubberBandIndex = CollectionUtils.getIndexById(_rubberBandCollection,_rubberBandId);
-			_subjectProxy.subjectId = _rubberBandCollection.getItemAt(_rubberBandIndex).subjectId;
+			subjectProxy.subjectId = _rubberBandCollection.getItemAt(_rubberBandIndex).subjectId;
 		}
 		
 		public function get rubberBandIndex():uint
@@ -57,12 +51,12 @@ package org.puremvc.as3.demos.flex.rails.indexcards.model
 		}
 		
 		public function get subjectId():int{
-			return _subjectProxy.subjectId;
+			return subjectProxy.subjectId;
 		}
 		
 		public function get subjectIndex():uint
 		{
-			return _subjectProxy.subjectIndex;
+			return subjectProxy.subjectIndex;
 		}
 		
 		public function get rubberBandCollection():ArrayCollection
@@ -72,7 +66,7 @@ package org.puremvc.as3.demos.flex.rails.indexcards.model
 		
 		public function get subjectCollection():ArrayCollection
 		{
-			return _subjectProxy.subjectCollection;
+			return subjectProxy.subjectCollection;
 		}		
 		
 		public function loadRubberBands():void
@@ -150,6 +144,13 @@ package org.puremvc.as3.demos.flex.rails.indexcards.model
 			var token:AsyncToken = service.send(dataObj);
 			token.addResponder(this);
 		}
+		
+		private var subjectProxy:SubjectProxy; 
+		
+		private var _currentUrl:String;
+		private var _rubberBandId:int;
+		private var _rubberBandIndex:uint;
+		private var _rubberBandCollection:ArrayCollection = new ArrayCollection();
 		
 	}
 }

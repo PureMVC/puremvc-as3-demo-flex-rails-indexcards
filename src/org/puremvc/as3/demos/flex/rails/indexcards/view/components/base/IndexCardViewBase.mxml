@@ -157,8 +157,6 @@
 					case btnLast:
 						scrollTo = Constants.SCROLL_LAST;
 						break;
-					default:
-					// Do nothing
 				}
 				dispatchEvent(new ItemScrollEvent(scrollCardEventType, scrollTo));
 			}

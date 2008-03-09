@@ -5,29 +5,29 @@
 */
 package org.puremvc.as3.demos.flex.rails.indexcards.view
 {
-	import org.puremvc.as3.demos.flex.rails.indexcards.ApplicationFacade;
-	import org.puremvc.as3.demos.flex.rails.indexcards.model.SubjectProxy;
-	
 	import flash.events.Event;
+
+	import org.puremvc.as3.interfaces.INotification;
+	import org.puremvc.as3.patterns.mediator.Mediator;
 	
-	import org.puremvc.interfaces.INotification;
-	import org.puremvc.patterns.mediator.Mediator;
+	import org.puremvc.as3.demos.flex.rails.indexcards.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.model.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.view.components.*;
 
 	public class SubjectMediator extends Mediator
 	{
-		
 		public static const NAME:String = "SubjectMediator";
 		
-		private var _facade:ApplicationFacade = ApplicationFacade.getInstance();
-		private var _proxy:SubjectProxy = _facade.retrieveProxy(ApplicationFacade.SUBJECT_PROXY) as SubjectProxy;
-		
-		public function SubjectMediator(viewComponent:Object=null)
+		public function SubjectMediator( viewComponent:SubjectEditPanel )
 		{
-			super(viewComponent);
-			viewComponent.addEventListener(viewComponent.updateSubjectEventType, onUserUpdateRequest);
-			viewComponent.addEventListener(viewComponent.createSubjectEventType, onUserCreateRequest);
-			viewComponent.addEventListener(viewComponent.deleteSubjectEventType, onUserDeleteRequest);
-			viewComponent.subjectCollection = _proxy.subjectCollection; 
+			super(NAME, viewComponent);
+			
+			subjectProxy = facade.retrieveProxy( SubjectProxy.NAME ) as SubjectProxy;
+			
+			subjectEditPanel.addEventListener(subjectEditPanel.updateSubjectEventType, onUserUpdateRequest);
+			subjectEditPanel.addEventListener(subjectEditPanel.createSubjectEventType, onUserCreateRequest);
+			subjectEditPanel.addEventListener(subjectEditPanel.deleteSubjectEventType, onUserDeleteRequest);
+			subjectEditPanel.subjectCollection = subjectProxy.subjectCollection; 
 		}
 		
 		override public function listNotificationInterests():Array
@@ -40,27 +40,32 @@ package org.puremvc.as3.demos.flex.rails.indexcards.view
 			switch(notification.getName())
 			{
 				case ApplicationFacade.SUBJECTS_LOADED:
-					viewComponent.subjectCollection = _proxy.subjectCollection; 
+					subjectEditPanel.subjectCollection = subjectProxy.subjectCollection; 
 					break;
-				default:
-					// do nothing
 			}
 		}
 		
 		private function onUserUpdateRequest(event:Event):void
 		{
-			_proxy.updateSubject(viewComponent);
+			subjectProxy.updateSubject(subjectEditPanel);
 		}
 		
 		private function onUserCreateRequest(event:Event):void
 		{
-			_proxy.createSubject(viewComponent);
+			subjectProxy.createSubject(subjectEditPanel);
 		}
 		
 		private function onUserDeleteRequest(event:Event):void
 		{
-			_proxy.deleteSubject(viewComponent.subjectId);
+			subjectProxy.deleteSubject(subjectEditPanel.subjectId);
 		}
+		
+		protected function get subjectEditPanel():SubjectEditPanel
+		{
+			return viewComponent as SubjectEditPanel;
+		}
+		
+		private var subjectProxy:SubjectProxy; 
 		
 	}
 }

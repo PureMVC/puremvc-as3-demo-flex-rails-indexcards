@@ -8,20 +8,16 @@ package org.puremvc.as3.demos.flex.rails.indexcards
 	import org.puremvc.as3.demos.flex.rails.indexcards.controller.*;
 	import org.puremvc.as3.demos.flex.rails.indexcards.model.*;
 	import org.puremvc.as3.demos.flex.rails.indexcards.view.*;
-	
-	import mx.collections.ArrayCollection;
-	
-	import org.puremvc.interfaces.IProxy;
-	import org.puremvc.patterns.facade.Facade;
-	import org.puremvc.patterns.observer.Notification;
+	import org.puremvc.as3.interfaces.IProxy;
+	import org.puremvc.as3.patterns.facade.Facade;
 	
 	public class ApplicationFacade extends Facade
 	{
 		// Notification name constants
-        public static const APP_STARTUP:String 				= "appStartup";
-        public static const APP_SHUTDOWN:String 			= "appShutdown";
-		public static const APP_LOGOUT:String 				= "appLogout";
-		public static const APP_LOGIN:String 				= "appLogin";
+        public static const STARTUP:String 					= "startup";
+        public static const SHUTDOWN:String 				= "shutdown";
+		public static const LOGOUT:String 					= "logout";
+		public static const LOGIN:String 					= "login";
 		public static const INDEX_CARD_LOAD:String          = "indexCardLoad";
 		public static const INDEX_CARDS_LOADED:String		= "indexCardsLoaded";
 		public static const	INDEX_CARDS_VIEW:String			= "indexCardsView";
@@ -30,11 +26,6 @@ package org.puremvc.as3.demos.flex.rails.indexcards
 		public static const SUBJECTS_LOADED:String			= "subjectsLoaded";
 		public static const SUBJECTS_VIEW:String			= "subjectsView";
 		public static const STUDY_VIEW:String				= "studyView";
-		
-		// Proxy name constants
-		public static const INDEX_CARD_PROXY:String  		= IndexCardProxy.NAME;
-		public static const RUBBER_BAND_PROXY:String		= RubberBandProxy.NAME;
-		public static const SUBJECT_PROXY:String			= SubjectProxy.NAME;
 		
 		/**
          * Singleton ApplicationFacade Factory Method
@@ -51,11 +42,11 @@ package org.puremvc.as3.demos.flex.rails.indexcards
         override protected function initializeController() : void 
         {
             super.initializeController(); 
-            registerCommand(APP_STARTUP, org.puremvc.as3.demos.flex.rails.indexcards.controller.ApplicationStartupCommand);
-            registerCommand(APP_LOGIN, org.puremvc.as3.demos.flex.rails.indexcards.controller.ApplicationLoginCommand);
-            registerCommand(INDEX_CARDS_VIEW, org.puremvc.as3.demos.flex.rails.indexcards.controller.IndexCardCommand);
-            registerCommand(RUBBER_BANDS_VIEW, org.puremvc.as3.demos.flex.rails.indexcards.controller.RubberBandCommand);
-            registerCommand(SUBJECTS_VIEW, org.puremvc.as3.demos.flex.rails.indexcards.controller.SubjectCommand);
+            registerCommand(STARTUP, ApplicationStartupCommand);
+            registerCommand(LOGIN, ApplicationLoginCommand);
+            registerCommand(INDEX_CARDS_VIEW, IndexCardCommand);
+            registerCommand(RUBBER_BANDS_VIEW, RubberBandCommand);
+            registerCommand(SUBJECTS_VIEW, SubjectCommand);
         }
         
          /**
@@ -77,21 +68,21 @@ package org.puremvc.as3.demos.flex.rails.indexcards
         /**
          * Starts the application
          */
-        public function startup(app:Object):void
+        public function startup(app:IndexCards):void
 		{
-		    notifyObservers(new Notification(APP_STARTUP, app));
+		    sendNotification(STARTUP, app);
 		} 
 		
 		/**
 		 * Registers the navigation controls on login
 		 */
-		public function login(viewComponent:Object):void
+		public function login(app:IndexCards):void
 		{
-			registerMediator(new NavigationMediator(viewComponent));
+			registerMediator(new NavigationMediator(app));
 		}
 		
 		
-		// Instantiates and registers proxies
+		// Instantiates and registers proxies on demand
 		private function createProxy(proxyName:String):IProxy 
 		{
 			var proxy:IProxy;
@@ -106,8 +97,6 @@ package org.puremvc.as3.demos.flex.rails.indexcards
 				case SubjectProxy.NAME:
 					proxy = new SubjectProxy;
 					break;
-				default:
-					// Do nothing
 			}
 			// Register the proxy and return it
 			registerProxy(proxy);

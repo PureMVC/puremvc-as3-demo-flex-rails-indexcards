@@ -5,8 +5,8 @@
 */
 package org.puremvc.as3.demos.flex.rails.indexcards.controller
 {
-	import org.puremvc.patterns.command.SimpleCommand;
-	import org.puremvc.interfaces.INotification;
+	import org.puremvc.as3.interfaces.INotification;
+	import org.puremvc.as3.patterns.command.SimpleCommand;
 
 	public class ApplicationLoginCommand extends SimpleCommand
 	{

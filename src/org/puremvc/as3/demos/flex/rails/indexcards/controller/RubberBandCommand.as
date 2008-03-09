@@ -5,30 +5,28 @@
 */
 package org.puremvc.as3.demos.flex.rails.indexcards.controller
 {
-	import org.puremvc.as3.demos.flex.rails.indexcards.ApplicationFacade;
-	import org.puremvc.as3.demos.flex.rails.indexcards.model.RubberBandProxy;
-	import org.puremvc.as3.demos.flex.rails.indexcards.view.RubberBandMediator;
-	
-	import org.puremvc.interfaces.INotification;
-	import org.puremvc.patterns.command.SimpleCommand;
+	import org.puremvc.as3.interfaces.INotification;
+	import org.puremvc.as3.patterns.command.SimpleCommand;
+
+	import org.puremvc.as3.demos.flex.rails.indexcards.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.model.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.view.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.view.components.*;
 
 	public class RubberBandCommand extends SimpleCommand
 	{
 		
-		override public function execute(notification:INotification):void
+		override public function execute( notification:INotification ):void
 		{
-			var facade:ApplicationFacade = ApplicationFacade.getInstance();
-			var proxy:RubberBandProxy = facade.retrieveProxy(ApplicationFacade.RUBBER_BAND_PROXY) as RubberBandProxy;
-			switch(notification.getName())
+			var rubberBandProxy:RubberBandProxy = facade.retrieveProxy(RubberBandProxy.NAME) as RubberBandProxy;
+			switch( notification.getName() )
 			{
-				case ApplicationFacade.APP_STARTUP:
-					proxy.loadRubberBands();
+				case ApplicationFacade.STARTUP:
+					rubberBandProxy.loadRubberBands();
 					break;
 				case ApplicationFacade.RUBBER_BANDS_VIEW:
-					facade.registerMediator(new RubberBandMediator(notification.getBody()));
+					facade.registerMediator( new RubberBandMediator(notification.getBody() as BandEditPanel));
 					break;
-				default:
-					// do nothing
 			}
 		}
 		

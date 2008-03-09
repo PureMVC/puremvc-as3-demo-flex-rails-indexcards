@@ -5,32 +5,27 @@
 */
 package org.puremvc.as3.demos.flex.rails.indexcards.model
 {
-	import org.puremvc.as3.demos.flex.rails.indexcards.ApplicationFacade;
-	import org.puremvc.as3.demos.flex.rails.indexcards.model.utils.*
-	import org.puremvc.as3.demos.flex.rails.indexcards.model.utils.CollectionUtils;
-	
-	import mx.collections.ArrayCollection;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.http.HTTPService;
+	import mx.collections.ArrayCollection;
 	
-	import org.puremvc.interfaces.IProxy;
-	import org.puremvc.patterns.observer.Notifier;
+	import org.puremvc.as3.interfaces.IProxy;
+	import org.puremvc.as3.patterns.proxy.Proxy;
 
-	public class SubjectProxy extends Notifier implements IProxy, IResponder
+	import org.puremvc.as3.demos.flex.rails.indexcards.*;
+	import org.puremvc.as3.demos.flex.rails.indexcards.model.utils.*;
+	
+
+	public class SubjectProxy extends Proxy implements IProxy, IResponder
 	{
 		
 		public static const NAME:String = "SubjectProxy";
 		
-		private var _subjectId:int;
-		private var _subjectIndex:uint;
-		private var _subjectCollection:ArrayCollection;
-		private var _currentUrl:String;
-		
-		public function getProxyName():String
+		public function SubjectProxy()
 		{
-			return NAME;
+			super( NAME, null );
 		}
 		
 		public function get subjectId():int 
@@ -133,5 +128,11 @@ package org.puremvc.as3.demos.flex.rails.indexcards.model
 			var token:AsyncToken = service.send(dataObj);
 			token.addResponder(this);
 		}
+
+		private var _currentUrl:String;
+		private var _subjectId:int;
+		private var _subjectIndex:uint;
+		private var _subjectCollection:ArrayCollection = new ArrayCollection();
+		
 	}
 }
