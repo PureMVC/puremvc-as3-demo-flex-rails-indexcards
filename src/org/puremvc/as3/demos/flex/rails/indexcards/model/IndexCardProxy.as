@@ -14,9 +14,8 @@ package org.puremvc.as3.demos.flex.rails.indexcards.model
 	import org.puremvc.as3.interfaces.IProxy;
 	import org.puremvc.as3.patterns.proxy.Proxy;
 	
-	import org.puremvc.as3.demos.flex.rails.indexcards.ApplicationFacade;
+	import org.puremvc.as3.demos.flex.rails.indexcards.*;
 	import org.puremvc.as3.demos.flex.rails.indexcards.model.utils.*;
-	import org.puremvc.as3.demos.flex.rails.indexcards.vo.*;
 
 	public class IndexCardProxy extends Proxy implements IProxy, IResponder
 	{
